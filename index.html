@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>몸,다시ON — 강남 필라테스 · 체형교정 물리치료</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --cream:#f6f2e8;
+    --cream2:#efe9da;
+    --ink:#16241d;
+    --forest:#1e3d2f;
+    --forest2:#274a38;
+    --orange:#e8672a;
+    --mute:#5f6b62;
+    --line:rgba(30,61,47,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--cream);color:var(--ink);font-family:"Noto Sans KR",sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word;}
+  h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:500;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  img,video{display:block;max-width:100%;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 6vw;}
+  .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--orange);font-weight:500;margin-bottom:14px;}
+
+  /* NAV */
+  nav.top{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 6vw;mix-blend-mode:difference;}
+  nav.top .brand{font-family:"Cormorant Garamond",serif;font-size:20px;color:#fff;letter-spacing:.02em;}
+  nav.top .brand b{color:#fff;font-weight:600;}
+  nav.top .cta{font-size:12px;letter-spacing:.08em;color:#fff;border:1px solid rgba(255,255,255,.55);padding:9px 18px;border-radius:999px;}
+
+  /* SCRUB NARRATIVE (video-driven, hero -> alignment) */
+  .scrub-wrap{height:440vh;position:relative;background:#0d1712;}
+  .scrub-stage{position:sticky;top:0;height:100svh;min-height:640px;overflow:hidden;background:#0d1712;}
+  .scrub-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s ease;filter:saturate(.9) brightness(.92);}
+  .scrub-stage video.on{opacity:1;}
+  .scrub-stage .scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg, rgba(13,23,18,.25) 0%, rgba(13,23,18,.45) 45%, rgba(13,23,18,.88) 100%);pointer-events:none;}
+  .scrub-stage .blackout{position:absolute;inset:0;z-index:2;background:#05070a;opacity:0;pointer-events:none;transition:opacity .45s ease;}
+  .scrub-copy{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;width:min(720px,80vw);color:#f6f2e8;pointer-events:none;text-align:center;opacity:0;transition:opacity .45s ease;}
+  .scrub-copy .eyebrow{color:var(--orange);}
+  .scrub-copy h2{font-size:clamp(32px,5.2vw,66px);line-height:1.28;color:#fff;}
+  .scrub-copy h2 b{color:var(--orange);font-weight:500;}
+  .taglist{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+  .taglist span{font-size:12px;color:#e8ded0;border:1px solid rgba(255,255,255,.28);padding:8px 15px;border-radius:999px;}
+  .chapdots{position:absolute;right:6vw;bottom:6vh;z-index:3;display:flex;flex-direction:column;gap:10px;}
+  .chapdots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);display:block;transition:background .3s ease, transform .3s ease;}
+  .chapdots i.on{background:var(--orange);transform:scale(1.35);}
+  .scrub-meta{position:absolute;left:6vw;top:5vh;z-index:3;font-size:10px;letter-spacing:.24em;color:#8d988e;}
+  .scrub-meta b{color:var(--orange);font-weight:400;}
+  .scrolldown{position:absolute;bottom:4vh;left:50%;transform:translateX(-50%);z-index:2;font-size:10px;letter-spacing:.3em;color:#a9b3ab;display:flex;align-items:center;gap:10px;flex-direction:column;}
+  .scrolldown i{width:1px;height:28px;background:linear-gradient(#e8672a,transparent);display:block;}
+
+  /* SECTION generic */
+  section{padding:13vh 0;position:relative;}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1);}
+  .reveal.on{opacity:1;transform:translateY(0);}
+
+  /* PROBLEM */
+  .problem{background:var(--forest);color:var(--cream);}
+  .problem .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:6vw;align-items:center;}
+  .problem h2{font-size:clamp(28px,3.6vw,44px);color:#fff;line-height:1.28;}
+  .problem h2 b{color:var(--orange);font-weight:500;}
+  .problem p{margin-top:22px;color:#c9d2c9;font-size:14.5px;line-height:1.9;max-width:46ch;}
+  .problem .stats{margin-top:36px;display:flex;gap:32px;flex-wrap:wrap;}
+  .problem .stats div b{display:block;font-family:"Cormorant Garamond",serif;font-size:34px;color:var(--orange);font-weight:500;}
+  .problem .stats div span{font-size:11px;color:#9fab9e;letter-spacing:.05em;}
+  .spine-card{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:9/13;background:#0a1410;}
+  .spine-card video{width:100%;height:100%;object-fit:cover;opacity:.92;}
+  .spine-card .tag{position:absolute;left:18px;bottom:18px;font-size:11px;letter-spacing:.14em;color:#fff;background:rgba(0,0,0,.35);padding:8px 14px;border-radius:999px;backdrop-filter:blur(6px);}
+
+  /* ANALYSIS */
+  .analysis .head{max-width:640px;margin-bottom:7vh;}
+  .analysis h2{font-size:clamp(28px,3.4vw,42px);color:var(--forest);}
+  .analysis p.sub{margin-top:16px;color:var(--mute);font-size:14.5px;line-height:1.85;}
+  .symptom-tags{margin-top:20px;display:flex;flex-wrap:wrap;gap:9px;}
+  .symptom-tags span{font-size:12px;color:var(--forest);border:1px solid var(--line);background:#fff;padding:8px 15px;border-radius:999px;}
+  .amosaic{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:170px;gap:14px;}
+  .amosaic figure{position:relative;overflow:hidden;border-radius:4px;grid-column:span 1;grid-row:span 1;background:#000;}
+  .amosaic figure.tall{grid-row:span 2;}
+  .amosaic figure.wide{grid-column:span 2;}
+  .amosaic img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+  .amosaic figure:hover img{transform:scale(1.05);}
+  .amosaic figcaption{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;font-size:11.5px;letter-spacing:.03em;color:#fff;background:linear-gradient(0deg, rgba(0,0,0,.72), transparent);}
+
+  /* TRUST */
+  .trust{background:var(--cream2);}
+  .trust .row{display:grid;grid-template-columns:.85fr 1.15fr;gap:6vw;align-items:center;}
+  .trust .badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.12em;color:var(--forest);border:1px solid var(--line);padding:8px 16px;border-radius:999px;margin-bottom:20px;}
+  .trust h2{font-size:clamp(26px,3.2vw,38px);color:var(--forest);line-height:1.3;}
+  .trust p{margin-top:18px;color:var(--mute);font-size:14.5px;line-height:1.9;max-width:48ch;}
+  .trust ul{margin-top:26px;display:flex;flex-direction:column;gap:12px;}
+  .trust li{font-size:13.5px;color:var(--ink);display:flex;gap:10px;align-items:baseline;}
+  .trust li::before{content:"—";color:var(--orange);}
+  .trust .photo{border-radius:6px;overflow:hidden;aspect-ratio:4/3;}
+  .trust .photo img{width:100%;height:100%;object-fit:cover;}
+
+  /* PROGRAMS */
+  .programs h2{font-size:clamp(28px,3.4vw,42px);color:var(--forest);max-width:600px;}
+  .programs p.sub{margin-top:16px;color:var(--mute);font-size:14.5px;max-width:52ch;}
+  .pgrid{margin-top:6vh;display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  .pcard{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;transition:transform .4s ease, box-shadow .4s ease;}
+  .pcard:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(30,61,47,.12);}
+  .pcard .ph{aspect-ratio:4/3;overflow:hidden;background:#111;}
+  .pcard .ph img{width:100%;height:100%;object-fit:cover;}
+  .pcard .body{padding:22px 22px 26px;}
+  .pcard .num{font-size:11px;color:var(--orange);letter-spacing:.1em;}
+  .pcard h3{margin-top:8px;font-size:21px;color:var(--forest);}
+  .pcard p{margin-top:10px;font-size:13px;color:var(--mute);line-height:1.75;}
+
+  /* EVENT CTA */
+  .event{background:var(--forest);color:#fff;}
+  .event .box{border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:7vh 6vw;display:grid;grid-template-columns:1fr auto;gap:6vw;align-items:center;}
+  .event .eyebrow{color:var(--orange);}
+  .event h2{font-size:clamp(26px,3.4vw,40px);color:#fff;line-height:1.3;}
+  .event .price{margin-top:18px;display:flex;align-items:baseline;gap:14px;}
+  .event .price .old{font-size:16px;color:#8d988e;text-decoration:line-through;}
+  .event .price .new{font-family:"Cormorant Garamond",serif;font-size:44px;color:var(--orange);font-weight:600;}
+  .event .price .pct{font-size:13px;background:var(--orange);color:#1a1408;padding:5px 12px;border-radius:999px;font-weight:500;}
+  .event ul{margin-top:20px;display:flex;gap:22px;flex-wrap:wrap;font-size:12px;color:#c9d2c9;}
+  .event .btnwrap{display:flex;flex-direction:column;align-items:flex-start;gap:10px;}
+  .event .book{background:var(--orange);color:#1a1408;padding:16px 30px;border-radius:999px;font-size:14px;letter-spacing:.03em;font-weight:500;white-space:nowrap;}
+  .event .note{font-size:11px;color:#8d988e;}
+
+  /* FOOTER STRIP */
+  footer.info{background:var(--cream);padding:9vh 0 6vh;}
+  footer.info .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5vw;border-top:1px solid var(--line);padding-top:6vh;}
+  footer.info h4{font-size:11px;letter-spacing:.16em;color:var(--orange);margin-bottom:14px;text-transform:uppercase;}
+  footer.info p, footer.info a{font-size:13.5px;color:var(--ink);line-height:2;}
+  footer.info .brandmark{font-family:"Cormorant Garamond",serif;font-size:26px;color:var(--forest);margin-bottom:8px;}
+  footer.info .bottom{margin-top:6vh;padding-top:3vh;border-top:1px solid var(--line);font-size:11px;color:var(--mute);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  @media (max-width:900px){
+    .problem .grid, .trust .row, .event .box{grid-template-columns:1fr;}
+    .amosaic{grid-template-columns:repeat(2,1fr);}
+    .amosaic figure.wide{grid-column:span 2;}
+    .pgrid{grid-template-columns:1fr;}
+    footer.info .grid{grid-template-columns:1fr;gap:5vh;}
+    .spine-card{max-width:320px;margin-top:5vh;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="brand"><b>몸,다시</b> ON</div>
+  <a class="cta" href="#event">첫방문 이벤트</a>
+</nav>
+
+<!-- SCRUB NARRATIVE: 4 real clips, scroll drives currentTime, captions sliced by seconds -->
+<div class="scrub-wrap">
+  <header class="scrub-stage">
+    <video id="v0" class="on" muted playsinline preload="auto"><source src="./media/clip-01-tilted.mp4" type="video/mp4" /></video>
+    <video id="v1" muted playsinline preload="auto"><source src="./media/clip-02.mp4" type="video/mp4" /></video>
+    <video id="v2" muted playsinline preload="auto"><source src="./media/clip-align.mp4" type="video/mp4" /></video>
+    <video id="v3" muted playsinline preload="auto"><source src="./media/clip-03.mp4" type="video/mp4" /></video>
+    <div class="scrim"></div>
+    <div class="blackout" id="blackout"></div>
+
+    <div class="scrub-meta">MOM DASI ON · <b id="scPct">0</b>%</div>
+
+    <div class="scrub-copy" id="scrubCopy">
+      <p class="eyebrow" id="scEyebrow">00 · BODY SOLUTION</p>
+      <h2 id="scHeadline">몸은<br><b>정직</b>합니다.</h2>
+      <div class="taglist" id="scTags"></div>
+    </div>
+
+    <div class="chapdots"><i class="on"></i><i></i><i></i><i></i></div>
+    <div class="scrolldown"><i></i>SCROLL</div>
+  </header>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="wrap grid">
+    <div class="reveal">
+      <p class="eyebrow">WHY IT HAPPENS</p>
+      <h2>기울어진 채로 <b>익숙해진</b> 하루가<br>결국 척추의 모양을 바꿉니다.</h2>
+      <p>책상 앞에 앉은 시간, 스마트폰을 내려다보는 각도, 짝다리로 서는 습관. 하나하나는 사소하지만 매일 반복되면 척추가 그 방향으로 굳습니다. 몸,다시ON은 그 습관이 남긴 흔적을 먼저 눈으로 확인하는 것에서 시작합니다.</p>
+      <div class="stats">
+        <div><b>80%</b><span>첫방문 체형분석 할인</span></div>
+        <div><b>50분</b><span>1:1 정밀 분석 소요시간</span></div>
+        <div><b>13+</b><span>실제 방문 후기</span></div>
+      </div>
+    </div>
+    <div class="spine-card reveal">
+      <video autoplay muted loop playsinline>
+        <source src="./media/clip-02.mp4" type="video/mp4" />
+      </video>
+      <div class="tag">SPINE · 척추 정렬 확인</div>
+    </div>
+  </div>
+</section>
+
+<!-- ANALYSIS -->
+<section class="analysis">
+  <div class="wrap">
+    <div class="head reveal">
+      <p class="eyebrow">PRECISION ANALYSIS</p>
+      <h2>느낌이 아니라, 측정된 숫자로.</h2>
+      <p class="sub">EXBODY 측정장비로 전면·측면·후면을 촬영하고, 족압과 체중 쏠림, 고관절 회전 패턴까지 확인합니다. 운동은 그 결과지 위에서 설계됩니다.</p>
+      <div class="symptom-tags">
+        <span>거북목·두통</span>
+        <span>만성 허리통증</span>
+        <span>좌우 밸런스 붕괴</span>
+        <span>수면의 질 저하</span>
+      </div>
+    </div>
+    <div class="amosaic reveal">
+      <figure class="tall wide">
+        <img src="./media/photos/business_4.jpg" alt="리포머 필라테스 수업 장면" />
+        <figcaption>1:1 리포머 필라테스 세션</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/photos/business_2.jpg" alt="척추 정렬 마킹 촬영" />
+        <figcaption>척추 라인 마킹 · 후면 촬영</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/photos/business_3.jpg" alt="척추 정렬 마킹 촬영 2" />
+        <figcaption>좌우 정렬 비교</figcaption>
+      </figure>
+      <figure class="wide">
+        <img src="./media/photos/business_5.jpg" alt="족압 분석 스캔 화면" />
+        <figcaption>족압 분석 · 체중 쏠림 측정</figcaption>
+      </figure>
+      <figure>
+        <img src="./media/photos/business_9.jpg" alt="스튜디오 내부, 기구 위 자세" />
+        <figcaption>고관절 회전 패턴 분석</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust">
+  <div class="wrap row">
+    <div class="photo reveal">
+      <img src="./media/photos/business_8.jpg" alt="스튜디오에서 서 있는 자세 확인" />
+    </div>
+    <div class="reveal">
+      <span class="badge">25 YEARS · CLINICAL EXPERIENCE</span>
+      <h2>체형은 보는 사람의 눈에<br>따라 달라지지 않습니다.</h2>
+      <p>25년 경력 물리치료사가 도수 전문 자격을 바탕으로 분석을 진행합니다. 눈대중이 아니라, 장비로 찍고 수치로 남기고, 그 다음에 운동을 처방합니다.</p>
+      <ul>
+        <li>정밀체형분석 + 체형분석운동 1회 체험</li>
+        <li>전면·측면·후면 촬영으로 좌우 비대칭 확인</li>
+        <li>고관절 회전 패턴 분석</li>
+        <li>족압 분석 · 체중 쏠림 측정</li>
+        <li>결과에 맞춘 재활 맞춤 운동 설계</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="programs">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="eyebrow">PROGRAM</p>
+      <h2>분석 다음은, 몸에 맞춘 운동입니다.</h2>
+      <p class="sub">체형분석 리포트를 기반으로 프로그램을 정합니다. 정해진 커리큘럼을 따라가는 게 아니라, 오늘 측정된 몸에 맞춰 매번 조정됩니다.</p>
+    </div>
+    <div class="pgrid reveal">
+      <div class="pcard">
+        <div class="ph"><img src="./media/photos/business_4.jpg" alt="리포머 필라테스" /></div>
+        <div class="body">
+          <p class="num">01</p>
+          <h3>리포머 필라테스</h3>
+          <p>기구의 저항을 이용해 코어와 자세 근육을 정확한 궤도로 다시 훈련합니다.</p>
+        </div>
+      </div>
+      <div class="pcard">
+        <div class="ph"><img src="./media/photos/business_9.jpg" alt="재활 맞춤 운동" /></div>
+        <div class="body">
+          <p class="num">02</p>
+          <h3>재활 맞춤 운동</h3>
+          <p>체형분석 결과에서 드러난 약한 쪽, 굳은 쪽을 우선순위로 두고 설계합니다.</p>
+        </div>
+      </div>
+      <div class="pcard">
+        <div class="ph"><img src="./media/photos/business_6.jpg" alt="부분 체형 검사" /></div>
+        <div class="body">
+          <p class="num">03</p>
+          <h3>부분 체형 검사</h3>
+          <p>척추측만, 골반비대칭, 족압 쏠림 등 신경 쓰이는 부위만 따로 정밀하게 봅니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENT CTA -->
+<section class="event" id="event">
+  <div class="wrap">
+    <div class="box reveal">
+      <div>
+        <p class="eyebrow">OPEN EVENT</p>
+        <h2>첫 방문 정밀 체형분석,<br>지금은 80% 할인입니다.</h2>
+        <div class="price">
+          <span class="old">15만원</span>
+          <span class="new">3만원</span>
+          <span class="pct">80% 할인</span>
+        </div>
+        <ul>
+          <li>1:1 맞춤 분석</li>
+          <li>50분 정밀 분석</li>
+          <li>결과 리포트 제공</li>
+          <li>사전 예약 필수</li>
+        </ul>
+      </div>
+      <div class="btnwrap">
+        <a class="book" href="tel:0507-1330-8834">0507-1330-8834 예약 문의</a>
+        <span class="note">사전 예약제로 운영됩니다</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER INFO -->
+<footer class="info">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <p class="brandmark">몸,다시ON</p>
+        <p style="color:var(--mute);font-size:13px;">체형 · 움직임 분석 & 맞춤운동</p>
+      </div>
+      <div>
+        <h4>Location</h4>
+        <p>서울 강남구 논현로8길 32-19 3층</p>
+        <p>국악고교사거리 도보 5분, 포이초공영주차장 인근</p>
+        <p>영업시간 매일 ~23:00 (09/25 추석 휴무)</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p><a href="tel:0507-1330-8834">0507-1330-8834</a></p>
+        <p><a href="https://www.instagram.com/wolf.7313449/" target="_blank" rel="noopener">Instagram @wolf.7313449</a></p>
+        <p><a href="https://map.naver.com/p/search/%EB%AA%B8%EB%8B%A4%EC%8B%9C%EC%98%A8" target="_blank" rel="noopener">네이버지도에서 길찾기</a></p>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>© 2026 몸,다시ON</span>
+      <span>대기공간 · 남녀 화장실 구분 · 예약제 · 무선인터넷 · 간편결제 · 주차</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.15 });
+  els.forEach((el) => io.observe(el));
+</script>
+
+<script>
+(function(){
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const smoothstep=(t,a,b)=>{ const x=clamp((t-a)/(b-a),0,1); return x*x*(3-2*x); };
+
+  // clip-01: intro line only, held for its whole run.
+  // clip-02 (spine closeup): the "구부러진 등과..." line lives here, then goes silent.
+  // clip-align: opening line, then silent.
+  // clip-03: short resolution line, flows into Part B.
+  //
+  // Scroll drives video.currentTime directly (scrub), plus the black/text overlay.
+  const clips = [
+    {
+      el: document.getElementById('v0'), duration: 10.005, weight: 0.20,
+      eyebrow: '00 · BODY SOLUTION',
+      slices: [
+        { from:0, to:10.005, headline:'몸은<br><b>정직</b>합니다.', blackFrom:0.0, blackTo:0.10 }
+      ]
+    },
+    {
+      el: document.getElementById('v1'), duration: 20.01, weight: 0.40,
+      eyebrow: '01 · UNSEEN',
+      // this clip spans overall scroll 20%-60%. text window (9.0s-17.51s local)
+      // lands at roughly 38%-55% overall scroll, silent before and after.
+      slices: [
+        { from:0, to:9.0, headline:'', silent:true },
+        { from:9.0, to:17.51, headline:'구부러진 등과<br>기울어진 골반은<br><b>쉽사리 알 수도,<br>치료도 되지</b> 않습니다.', blackFrom:0.08, blackTo:0.35 },
+        { from:17.51, to:20.01, headline:'', silent:true }
+      ]
+    },
+    {
+      el: document.getElementById('v2'), duration: 10.005, weight: 0.26,
+      eyebrow: '02 · WITH MOMDASION',
+      slices: [
+        { from:0, to:2, headline:'몸,다시ON과<br><b>함께한다면,</b>', blackFrom:0.05, blackTo:0.24 },
+        { from:2, to:10.005, headline:'', silent:true }
+      ]
+    },
+    {
+      el: document.getElementById('v3'), duration: 10.005, weight: 0.14,
+      eyebrow: '03 · ALIGNED',
+      slices: [
+        { from:0, to:10.005, headline:'몸은<br><b>다시</b> 섭니다.', blackFrom:0.15, blackTo:0.36 }
+      ]
+    }
+  ];
+
+  // cumulative scroll boundaries from weights
+  let acc = 0;
+  clips.forEach((c)=>{ c.start = acc; acc += c.weight; c.end = acc; });
+
+  const headlineEl = document.getElementById('scHeadline');
+  const eyebrowEl = document.getElementById('scEyebrow');
+  const tagWrap = document.getElementById('scTags');
+  const pctEl = document.getElementById('scPct');
+  const dots = [...document.querySelectorAll('.chapdots i')];
+  const blackoutEl = document.getElementById('blackout');
+  const copyBox = document.getElementById('scrubCopy');
+
+  let curClip = -1, curSlice = -1;
+
+  function updateContent(clipIdx, sliceIdx){
+    if(clipIdx===curClip && sliceIdx===curSlice) return;
+    curClip=clipIdx; curSlice=sliceIdx;
+    const clip = clips[clipIdx];
+    const slice = clip.slices[sliceIdx];
+
+    eyebrowEl.textContent = clip.eyebrow;
+    headlineEl.innerHTML = slice.headline;
+    tagWrap.innerHTML = '';
+    (slice.tags||[]).forEach((t)=>{
+      const s=document.createElement('span'); s.textContent=t;
+      tagWrap.appendChild(s);
+    });
+    dots.forEach((d,i)=>d.classList.toggle('on', i===clipIdx));
+  }
+
+  function apply(overallP){
+    let clipIdx = clips.length - 1;
+    clips.forEach((c,i)=>{ if(overallP >= c.start) clipIdx = i; });
+    const clip = clips[clipIdx];
+    const localP = clamp((overallP - clip.start) / Math.max(0.0001, clip.end - clip.start), 0, 1);
+
+    clips.forEach((c,i)=>{ c.el.classList.toggle('on', i===clipIdx); });
+
+    const t = localP * clip.duration;
+    if (Math.abs(clip.el.currentTime - t) > 0.05 && clip.el.readyState >= 1) {
+      clip.el.currentTime = t;
+    }
+
+    let sliceIdx = 0;
+    clip.slices.forEach((s,i)=>{ if(t >= s.from) sliceIdx = i; });
+    const slice = clip.slices[sliceIdx];
+
+    updateContent(clipIdx, sliceIdx);
+
+    let black;
+    if (slice.silent) {
+      black = 0;
+    } else {
+      const sliceTo = slice.to != null ? slice.to : clip.duration;
+      const sliceLocalP = clamp((t - slice.from) / Math.max(0.0001, sliceTo - slice.from), 0, 1);
+      const bf = slice.blackFrom != null ? slice.blackFrom : 0.18;
+      const bt = slice.blackTo != null ? slice.blackTo : 0.38;
+      black = smoothstep(sliceLocalP, bf, bt);
+    }
+
+    blackoutEl.style.opacity = black;
+    copyBox.style.opacity = black;
+
+    pctEl.textContent = Math.round(overallP*100);
+  }
+
+  function progress(){
+    const wrap = document.querySelector('.scrub-wrap');
+    const max = wrap.offsetHeight - innerHeight;
+    return clamp(scrollY/Math.max(1,max),0,1);
+  }
+
+  let raf=0;
+  function loop(){ apply(progress()); raf=0; }
+  function onScroll(){ if(!raf) raf=requestAnimationFrame(loop); }
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', onScroll);
+
+  clips.forEach((c)=>{ c.el.pause(); c.el.load(); });
+  apply(0);
+})();
+</script>
+</body>
+</html>
