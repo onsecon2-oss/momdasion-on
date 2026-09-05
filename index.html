@@ -53,6 +53,8 @@
   .scrub-meta b{color:var(--orange);font-weight:400;}
   .scrolldown{position:absolute;bottom:4vh;left:50%;transform:translateX(-50%);z-index:2;font-size:10px;letter-spacing:.3em;color:#a9b3ab;display:flex;align-items:center;gap:10px;flex-direction:column;}
   .scrolldown i{width:1px;height:28px;background:linear-gradient(#e8672a,transparent);display:block;}
+  .next-btn{position:absolute;left:50%;bottom:5vh;transform:translateX(-50%);z-index:5;background:var(--orange);color:#1a1408;border:none;padding:14px 38px;border-radius:999px;font-size:13px;letter-spacing:.06em;font-weight:500;cursor:pointer;transition:transform .2s ease, box-shadow .2s ease;box-shadow:0 10px 30px rgba(232,103,42,.35);}
+  .next-btn:hover{transform:translateX(-50%) translateY(-2px);}
 
   /* SECTION generic */
   section{padding:13vh 0;position:relative;}
@@ -170,6 +172,7 @@
 
     <div class="chapdots"><i class="on"></i><i></i><i></i><i></i></div>
     <div class="scrolldown"><i></i>SCROLL</div>
+    <button class="next-btn" id="jumpNextBtn">다음</button>
   </header>
 </div>
 
@@ -479,6 +482,25 @@
   function onScroll(){ if(!raf) raf=requestAnimationFrame(loop); }
   addEventListener('scroll', onScroll, {passive:true});
   addEventListener('resize', onScroll);
+
+  // "다음" button: jumps forward to the next chapter boundary (or into the
+  // section below once the last chapter is reached), for anyone who would
+  // rather click than scroll. Does not replace the scroll behavior above.
+  const jumpBtn = document.getElementById('jumpNextBtn');
+  if (jumpBtn) {
+    jumpBtn.addEventListener('click', () => {
+      const wrap = document.querySelector('.scrub-wrap');
+      const max = wrap.offsetHeight - innerHeight;
+      const curP = clamp(scrollY / Math.max(1, max), 0, 1);
+      const boundaries = [...clips.map((c) => c.start), 1];
+      let target = 1;
+      for (const b of boundaries) {
+        if (b > curP + 0.005) { target = b; break; }
+      }
+      const destY = target >= 1 ? wrap.offsetHeight : max * target;
+      window.scrollTo({ top: destY, behavior: 'smooth' });
+    });
+  }
 
   clips.forEach((c)=>{ c.el.pause(); c.el.load(); });
   apply(0);
