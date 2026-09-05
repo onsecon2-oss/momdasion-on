@@ -36,7 +36,8 @@
   /* SCRUB NARRATIVE (video-driven, hero -> alignment) */
   .scrub-wrap{height:440vh;position:relative;background:#0d1712;}
   .scrub-stage{position:sticky;top:0;height:100svh;min-height:640px;overflow:hidden;background:#0d1712;}
-  .scrub-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s ease;filter:saturate(.9) brightness(.92);}
+  .scrub-stage video{position:absolute;inset:0;width:112%;height:112%;left:-6%;top:-6%;object-fit:cover;opacity:0;transition:opacity 1s ease;filter:saturate(.9) brightness(.92);animation:kenburns 20s ease-in-out infinite alternate;}
+  @keyframes kenburns{0%{transform:scale(1) translate(0,0);}100%{transform:scale(1.07) translate(-1.2%,-0.8%);}}
   .scrub-stage video.on{opacity:1;}
   .scrub-stage .scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg, rgba(13,23,18,.25) 0%, rgba(13,23,18,.45) 45%, rgba(13,23,18,.88) 100%);pointer-events:none;}
   .scrub-stage .blackout{position:absolute;inset:0;z-index:2;background:#05070a;opacity:0;pointer-events:none;transition:opacity .45s ease;}
@@ -53,8 +54,7 @@
   .scrub-meta b{color:var(--orange);font-weight:400;}
   .scrolldown{position:absolute;bottom:4vh;left:50%;transform:translateX(-50%);z-index:2;font-size:10px;letter-spacing:.3em;color:#a9b3ab;display:flex;align-items:center;gap:10px;flex-direction:column;}
   .scrolldown i{width:1px;height:28px;background:linear-gradient(#e8672a,transparent);display:block;}
-  .next-btn{position:absolute;left:50%;bottom:5vh;transform:translateX(-50%);z-index:5;background:var(--orange);color:#1a1408;border:none;padding:14px 38px;border-radius:999px;font-size:13px;letter-spacing:.06em;font-weight:500;cursor:pointer;transition:transform .2s ease, box-shadow .2s ease;box-shadow:0 10px 30px rgba(232,103,42,.35);}
-  .next-btn:hover{transform:translateX(-50%) translateY(-2px);}
+
 
   /* SECTION generic */
   section{padding:13vh 0;position:relative;}
@@ -155,10 +155,10 @@
 <!-- SCRUB NARRATIVE: 4 real clips, scroll drives currentTime, captions sliced by seconds -->
 <div class="scrub-wrap">
   <header class="scrub-stage">
-    <video id="v0" class="on" muted playsinline preload="auto"><source src="./media/clip-01-tilted.mp4" type="video/mp4" /></video>
-    <video id="v1" muted playsinline preload="auto"><source src="./media/clip-02.mp4" type="video/mp4" /></video>
-    <video id="v2" muted playsinline preload="auto"><source src="./media/clip-align.mp4" type="video/mp4" /></video>
-    <video id="v3" muted playsinline preload="auto"><source src="./media/clip-03.mp4" type="video/mp4" /></video>
+    <video id="v0" class="on" muted loop autoplay playsinline preload="auto"><source src="./media/clip-01-tilted.mp4" type="video/mp4" /></video>
+    <video id="v1" muted loop autoplay playsinline preload="auto"><source src="./media/clip-02.mp4" type="video/mp4" /></video>
+    <video id="v2" muted loop autoplay playsinline preload="auto"><source src="./media/clip-align.mp4" type="video/mp4" /></video>
+    <video id="v3" muted loop autoplay playsinline preload="auto"><source src="./media/clip-03.mp4" type="video/mp4" /></video>
     <div class="scrim"></div>
     <div class="blackout" id="blackout"></div>
 
@@ -172,7 +172,6 @@
 
     <div class="chapdots"><i class="on"></i><i></i><i></i><i></i></div>
     <div class="scrolldown"><i></i>SCROLL</div>
-    <button class="next-btn" id="jumpNextBtn">다음</button>
   </header>
 </div>
 
@@ -363,47 +362,56 @@
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const smoothstep=(t,a,b)=>{ const x=clamp((t-a)/(b-a),0,1); return x*x*(3-2*x); };
 
-  // clip-01: intro line only, held for its whole run.
-  // clip-02 (spine closeup): the "구부러진 등과..." line lives here, then goes silent.
-  // clip-align: opening line, then silent.
-  // clip-03: short resolution line, flows into Part B.
-  //
-  // Scroll drives video.currentTime directly (scrub), plus the black/text overlay.
+  // Rebuilt from scratch: all 4 clips, fewer text beats (3 total instead of 4-5)
+  // so the video gets long, uninterrupted stretches. The spine close-up clip
+  // (v1) is never seeked -- it's frozen on one still frame -- because scrubbing
+  // a tightly-cropped shot is exactly where seek artifacts read as "breaking."
+  // Final clip is the alignment-graphic shot (marker line + gauge).
   const clips = [
     {
-      el: document.getElementById('v0'), duration: 10.005, weight: 0.20,
+      el: document.getElementById('v0'), duration: 10.005, weight: 0.15,
       eyebrow: '00 · BODY SOLUTION',
       slices: [
-        { from:0, to:10.005, headline:'몸은<br><b>정직</b>합니다.', blackFrom:0.0, blackTo:0.10 }
+        { from:0, to:10.005, headline:'몸은<br><b>정직</b>합니다.', blackFrom:0.0, blackTo:0.12 }
       ]
     },
     {
-      el: document.getElementById('v1'), duration: 20.01, weight: 0.40,
+      el: document.getElementById('v1'), duration: 20.01, weight: 0.35,
       eyebrow: '01 · UNSEEN',
-      // this clip spans overall scroll 20%-60%. text window (9.0s-17.51s local)
-      // lands at roughly 38%-55% overall scroll, silent before and after.
+      // silent, then the one problem line, then a long silent tail -- lots of
+      // clean video time on either side of the text.
       slices: [
-        { from:0, to:9.0, headline:'', silent:true },
-        { from:9.0, to:17.51, headline:'구부러진 등과<br>기울어진 골반은<br><b>쉽사리 알 수도,<br>치료도 되지</b> 않습니다.', blackFrom:0.08, blackTo:0.35 },
-        { from:17.51, to:20.01, headline:'', silent:true }
+        { from:0, to:6, headline:'', silent:true },
+        { from:6, to:12, headline:'구부러진 등과<br>기울어진 골반은<br><b>쉽사리 알 수도,<br>치료도 되지</b> 않습니다.', blackFrom:0.1, blackTo:0.45 },
+        { from:12, to:20.01, headline:'', silent:true }
       ]
     },
     {
-      el: document.getElementById('v2'), duration: 10.005, weight: 0.26,
+      el: document.getElementById('v2'), duration: 10.005, weight: 0.35,
       eyebrow: '02 · WITH MOMDASION',
+      // 굴은등 (alignment-graphic clip) -- pure breathing interlude, no text,
+      // given extra room since this is now the video we want to show off longest.
       slices: [
-        { from:0, to:2, headline:'몸,다시ON과<br><b>함께한다면,</b>', blackFrom:0.05, blackTo:0.24 },
-        { from:2, to:10.005, headline:'', silent:true }
+        { from:0, to:10.005, headline:'', silent:true }
       ]
     },
     {
-      el: document.getElementById('v3'), duration: 10.005, weight: 0.14,
+      el: document.getElementById('v3'), duration: 10.005, weight: 0.15,
       eyebrow: '03 · ALIGNED',
+      // 바르게 서있는 해골 -- merged closing line held back until almost the
+      // very end (~95%-99% overall scroll).
       slices: [
-        { from:0, to:10.005, headline:'몸은<br><b>다시</b> 섭니다.', blackFrom:0.15, blackTo:0.36 }
+        { from:0, to:10.005, headline:'\uBAB8,\uB2E4\uC2DCON\uACFC \uD568\uAED8\uB77C\uBA74,<br><b>\uBAB8\uC740 \uB2E4\uC2DC</b> \uC12D\uB2C8\uB2E4.', blackFrom:0.75, blackTo:0.97 }
       ]
     }
   ];
+
+  // let each clip actually play on a native loop -- no JS seeking at all,
+  // so there is zero risk of seek-induced stutter. The browser's own decode
+  // pipeline handles playback; scroll only drives crossfade + text overlay.
+  clips.forEach((c)=>{
+    c.el.play().catch(() => {});
+  });
 
   // cumulative scroll boundaries from weights
   let acc = 0;
@@ -444,9 +452,6 @@
     clips.forEach((c,i)=>{ c.el.classList.toggle('on', i===clipIdx); });
 
     const t = localP * clip.duration;
-    if (Math.abs(clip.el.currentTime - t) > 0.05 && clip.el.readyState >= 1) {
-      clip.el.currentTime = t;
-    }
 
     let sliceIdx = 0;
     clip.slices.forEach((s,i)=>{ if(t >= s.from) sliceIdx = i; });
@@ -483,26 +488,6 @@
   addEventListener('scroll', onScroll, {passive:true});
   addEventListener('resize', onScroll);
 
-  // "다음" button: jumps forward to the next chapter boundary (or into the
-  // section below once the last chapter is reached), for anyone who would
-  // rather click than scroll. Does not replace the scroll behavior above.
-  const jumpBtn = document.getElementById('jumpNextBtn');
-  if (jumpBtn) {
-    jumpBtn.addEventListener('click', () => {
-      const wrap = document.querySelector('.scrub-wrap');
-      const max = wrap.offsetHeight - innerHeight;
-      const curP = clamp(scrollY / Math.max(1, max), 0, 1);
-      const boundaries = [...clips.map((c) => c.start), 1];
-      let target = 1;
-      for (const b of boundaries) {
-        if (b > curP + 0.005) { target = b; break; }
-      }
-      const destY = target >= 1 ? wrap.offsetHeight : max * target;
-      window.scrollTo({ top: destY, behavior: 'smooth' });
-    });
-  }
-
-  clips.forEach((c)=>{ c.el.pause(); c.el.load(); });
   apply(0);
 })();
 </script>
