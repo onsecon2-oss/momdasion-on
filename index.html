@@ -36,8 +36,8 @@
   /* SCRUB NARRATIVE (video-driven, hero -> alignment) */
   .scrub-wrap{height:440vh;position:relative;background:#0d1712;}
   .scrub-stage{position:sticky;top:0;height:100svh;min-height:640px;overflow:hidden;background:#0d1712;}
-  .scrub-stage video{position:absolute;inset:0;width:112%;height:112%;left:-6%;top:-6%;object-fit:cover;opacity:0;transition:opacity 1s ease;filter:saturate(.9) brightness(.92);animation:kenburns 20s ease-in-out infinite alternate;}
-  @keyframes kenburns{0%{transform:scale(1) translate(0,0);}100%{transform:scale(1.07) translate(-1.2%,-0.8%);}}
+  .scrub-stage video{position:absolute;inset:0;width:104%;height:104%;left:-2%;top:-2%;object-fit:cover;opacity:0;transition:opacity 1s ease;filter:saturate(.9) brightness(.92);animation:kenburns 20s ease-in-out infinite alternate;}
+  @keyframes kenburns{0%{transform:scale(1) translate(0,0);}100%{transform:scale(1.025) translate(-0.6%,-0.4%);}}
   .scrub-stage video.on{opacity:1;}
   .scrub-stage .scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg, rgba(13,23,18,.25) 0%, rgba(13,23,18,.45) 45%, rgba(13,23,18,.88) 100%);pointer-events:none;}
   .scrub-stage .blackout{position:absolute;inset:0;z-index:2;background:#05070a;opacity:0;pointer-events:none;transition:opacity .45s ease;}
@@ -443,6 +443,7 @@
     dots.forEach((d,i)=>d.classList.toggle('on', i===clipIdx));
   }
 
+  let activeClipIdx = -1;
   function apply(overallP){
     let clipIdx = clips.length - 1;
     clips.forEach((c,i)=>{ if(overallP >= c.start) clipIdx = i; });
@@ -450,6 +451,17 @@
     const localP = clamp((overallP - clip.start) / Math.max(0.0001, clip.end - clip.start), 0, 1);
 
     clips.forEach((c,i)=>{ c.el.classList.toggle('on', i===clipIdx); });
+
+    // whenever a clip newly becomes the active one, restart it from its own
+    // beginning so each section always opens on the same intended frame,
+    // instead of whatever point its free-running loop happens to be at.
+    if (clipIdx !== activeClipIdx) {
+      activeClipIdx = clipIdx;
+      try {
+        clip.el.currentTime = 0;
+        clip.el.play().catch(() => {});
+      } catch (e) {}
+    }
 
     const t = localP * clip.duration;
 
